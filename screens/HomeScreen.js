@@ -92,78 +92,100 @@ const HomeScreen = ({ navigation }) => {
 
     return (
         <View style={styles.container}>
-            <Button
-                title="Upload Photo"
-                onPress={() => navigation.navigate("Save Photo")}
-            />
+            <>
+                <Button
+                    title="Upload Photo"
+                    onPress={() => navigation.navigate("Save Photo")}
+                />
 
-            {Object.keys(photosByPlant).length === 0 ? (
-                <Text style={styles.noPhotos}>No photos uploaded yet!</Text>
-            ) : (
-                Object.keys(photosByPlant).map((plantName) => (
-                    <View key={plantName} style={styles.plantSection}>
-                        <View
-                            style={{
-                                display: "flex",
-                                flexDirection: "row",
-                                alignItems: "center",
-                                gap: 8,
-                            }}
-                        >
-                            <Text style={styles.plantName}>{plantName}</Text>
+                {Object.keys(photosByPlant).length === 0 ? (
+                    <Text style={styles.noPhotos}>No photos uploaded yet!</Text>
+                ) : (
+                    Object.keys(photosByPlant).map((plantName) => (
+                        <View key={plantName} style={styles.plantSection}>
+                            <View
+                                style={{
+                                    display: "flex",
+                                    flexDirection: "row",
+                                    alignItems: "center",
+                                    gap: 8,
+                                }}
+                            >
+                                <Text style={styles.plantName}>
+                                    {plantName}
+                                </Text>
 
-                            <Button
-                                title="Compare"
-                                onPress={() =>
-                                    navigation.navigate("PlantGallery", {
-                                        plantName: plantName,
-                                        photos: photosByPlant[plantName],
-                                    })
-                                }
-                            />
-                        </View>
+                                <Button
+                                    title="Compare"
+                                    onPress={() =>
+                                        navigation.navigate("PlantGallery", {
+                                            plantName: plantName,
+                                            photos: photosByPlant[plantName],
+                                        })
+                                    }
+                                />
+                            </View>
 
-                        <FlatList
-                            data={photosByPlant[plantName].reverse()}
-                            horizontal={true}
-                            keyExtractor={(item, index) => index.toString()}
-                            renderItem={({ item }) => (
-                                <View style={styles.photoContainer}>
-                                    <TouchableOpacity
-                                        onPress={() => openFullScreen(item.uri)}
-                                    >
-                                        <Image
-                                            source={{ uri: item.uri }}
-                                            style={styles.photo}
-                                        />
-                                        <Text style={styles.dateText}>
-                                            {item.date}
-                                        </Text>
+                            <FlatList
+                                data={photosByPlant[plantName].reverse()}
+                                horizontal={true}
+                                keyExtractor={(item, index) => index.toString()}
+                                renderItem={({ item }) => (
+                                    <View style={styles.photoContainer}>
                                         <TouchableOpacity
-                                            style={styles.removeButton}
                                             onPress={() =>
-                                                removePhoto(plantName, item.uri)
+                                                openFullScreen(item.uri)
                                             }
                                         >
-                                            <AntDesign
-                                                name="closecircleo"
-                                                size={24}
-                                                color="red"
+                                            <Image
+                                                source={{ uri: item.uri }}
+                                                style={styles.photo}
                                             />
+                                            <Text style={styles.dateText}>
+                                                {item.date}
+                                            </Text>
+                                            <TouchableOpacity
+                                                style={styles.removeButton}
+                                                onPress={() =>
+                                                    removePhoto(
+                                                        plantName,
+                                                        item.uri
+                                                    )
+                                                }
+                                            >
+                                                <AntDesign
+                                                    name="closecircleo"
+                                                    size={24}
+                                                    color="red"
+                                                />
+                                            </TouchableOpacity>
                                         </TouchableOpacity>
-                                    </TouchableOpacity>
-                                </View>
-                            )}
-                        />
-                    </View>
-                ))
-            )}
+                                    </View>
+                                )}
+                            />
+                        </View>
+                    ))
+                )}
+            </>
+
+            <View>
+                <TouchableOpacity
+                    onPress={() => navigation.navigate("Home")}
+                >
+                    <Text>Home</Text>
+                </TouchableOpacity>
+            </View>
         </View>
     );
 };
 
 const styles = StyleSheet.create({
     container: {
+        height: "90%",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "space-between",
+        alignItems: "flex-start",
         padding: 16,
         backgroundColor: "#fff",
     },
