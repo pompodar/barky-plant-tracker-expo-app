@@ -1,11 +1,13 @@
 import React, { useState } from "react";
 import {
     View,
+    Text,
     Button,
     TextInput,
     Image,
     StyleSheet,
     Alert,
+    TouchableOpacity,
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -66,7 +68,9 @@ const SavePhotoScreen = ({ navigation }) => {
                 value={plantName}
                 onChangeText={setPlantName}
             />
-            <Button title="Pick an Image" onPress={pickImage} />
+            <TouchableOpacity style={styles.button} onPress={pickImage}>
+                <Text style={styles.buttonText}>Pick an image</Text>
+            </TouchableOpacity>
             {photoUri && (
                 <Image source={{ uri: photoUri }} style={styles.image} />
             )}
@@ -89,6 +93,17 @@ const styles = StyleSheet.create({
         padding: 10,
         marginBottom: 20,
         borderRadius: 5,
+    },
+    button: {
+        padding: 20,
+        paddingBlock: 10,
+        borderRadius: 5,
+        backgroundColor: "aqua",
+        color: "white",
+        marginBottom: 20,
+    },
+    buttonText: {
+        color: "white",
     },
     image: {
         width: 200,

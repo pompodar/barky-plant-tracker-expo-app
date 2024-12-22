@@ -19,7 +19,7 @@ const HomeScreen = ({ navigation }) => {
         const loadPhotos = async () => {
             try {
                 const savedPhotos = await AsyncStorage.getItem("pics");
-                
+
                 setPhotosByPlant(savedPhotos ? JSON.parse(savedPhotos) : {});
             } catch (error) {
                 console.error("Error loading photos:", error);
@@ -86,6 +86,9 @@ const HomeScreen = ({ navigation }) => {
         );
     };
 
+    const openFullScreen = (uri) => {
+        navigation.navigate("FullScreenImageScreen", { uri });
+    };
 
     return (
         <View style={styles.container}>
@@ -99,14 +102,36 @@ const HomeScreen = ({ navigation }) => {
             ) : (
                 Object.keys(photosByPlant).map((plantName) => (
                     <View key={plantName} style={styles.plantSection}>
-                        <Text style={styles.plantName}>{plantName}</Text>
+                        <View
+                            style={{
+                                display: "flex",
+                                flexDirection: "row",
+                                alignItems: "center",
+                                gap: 8,
+                            }}
+                        >
+                            <Text style={styles.plantName}>{plantName}</Text>
+
+                            <Button
+                                title="Compare"
+                                onPress={() =>
+                                    navigation.navigate("PlantGallery", {
+                                        plantName: plantName,
+                                        photos: photosByPlant[plantName],
+                                    })
+                                }
+                            />
+                        </View>
+
                         <FlatList
                             data={photosByPlant[plantName].reverse()}
                             horizontal={true}
                             keyExtractor={(item, index) => index.toString()}
                             renderItem={({ item }) => (
                                 <View style={styles.photoContainer}>
-                                    <TouchableOpacity>
+                                    <TouchableOpacity
+                                        onPress={() => openFullScreen(item.uri)}
+                                    >
                                         <Image
                                             source={{ uri: item.uri }}
                                             style={styles.photo}
@@ -148,6 +173,10 @@ const styles = StyleSheet.create({
         marginBottom: 16,
     },
     plantSection: {
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center",
         marginBlock: 20,
     },
     plantName: {
@@ -175,6 +204,10 @@ const styles = StyleSheet.create({
         color: "#888",
     },
     removeButton: {
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center",
         marginTop: 10,
     },
     removeButtonText: {
