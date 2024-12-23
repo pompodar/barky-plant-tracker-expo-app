@@ -11,6 +11,7 @@ import {
 } from "react-native";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Shadow } from "react-native-shadow-2";
 
 const HomeScreen = ({ navigation }) => {
     const [photosByPlant, setPhotosByPlant] = useState({});
@@ -103,12 +104,35 @@ const HomeScreen = ({ navigation }) => {
                                     display: "flex",
                                     flexDirection: "row",
                                     alignItems: "center",
+                                    justifyContent: "center",
+                                    alignSelf: "flex-start",
                                     gap: 8,
+                                    borderBottomWidth: 1,
+                                    borderColor: "#FF7F50",
                                 }}
                             >
                                 <Text style={styles.plantName}>
                                     {plantName}
                                 </Text>
+
+                                <TouchableOpacity
+                                    style={{
+                                        display: "flex",
+                                        alignItems: "center",
+                                    }}
+                                    onPress={() =>
+                                        navigation.navigate("PlantGallery", {
+                                            plantName: plantName,
+                                            photos: photosByPlant[plantName],
+                                        })
+                                    }
+                                >
+                                    <AntDesign
+                                        name="shrink"
+                                        size={18}
+                                        color="#4A4A4A"
+                                    />
+                                </TouchableOpacity>
                             </View>
 
                             <FlatList
@@ -118,16 +142,20 @@ const HomeScreen = ({ navigation }) => {
                                 renderItem={({ item }) => (
                                     <View style={styles.photoContainer}>
                                         <TouchableOpacity
+                                            style={styles.photoContainer}
                                             onPress={() =>
                                                 openFullScreen(item.uri)
                                             }
                                         >
-                                            <Image
-                                                source={{ uri: item.uri }}
-                                                style={styles.photo}
-                                            />
+                                            <Shadow>
+                                                <Image
+                                                    source={{ uri: item.uri }}
+                                                    style={styles.photo}
+                                                />
+                                            </Shadow>
+                                            ;
                                             <Text style={styles.dateText}>
-                                                {item.date}
+                                                {item.date.split(",")[0]}
                                             </Text>
                                             <TouchableOpacity
                                                 style={styles.removeButton}
@@ -141,31 +169,13 @@ const HomeScreen = ({ navigation }) => {
                                                 <AntDesign
                                                     name="closecircleo"
                                                     size={24}
-                                                    color="red"
+                                                    color="#FF4500"
                                                 />
                                             </TouchableOpacity>
                                         </TouchableOpacity>
                                     </View>
                                 )}
                             />
-
-                            <TouchableOpacity
-                                style={styles.leaf}
-                                onPress={() =>
-                                    navigation.navigate("PlantGallery", {
-                                        plantName: plantName,
-                                        photos: photosByPlant[plantName],
-                                    })
-                                }
-                            >
-                                <AntDesign
-                                    name="shrink"
-                                    size={24}
-                                    color="#4A4A4A"
-                                />
-
-                                <Text style={styles.compareText}>compare</Text>
-                            </TouchableOpacity>
                         </View>
                     ))
                 )}
@@ -219,7 +229,7 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         alignItems: "center",
         marginTop: 20,
-        height: 200,
+        height: 210,
     },
     plantName: {
         fontSize: 16,
@@ -230,12 +240,15 @@ const styles = StyleSheet.create({
     },
     photoContainer: {
         margin: 5,
+        display: "flex",
         alignItems: "center",
+        justifyContent: "center",
     },
     photo: {
         width: 100,
         height: 100,
-        borderRadius: 8,
+        borderRadius: 9999,
+        shadowColor: "black",
     },
     noPhotos: {
         fontSize: 16,
@@ -244,7 +257,7 @@ const styles = StyleSheet.create({
         marginTop: 20,
     },
     dateText: {
-        fontSize: 12,
+        fontSize: 10,
         color: "#888",
         fontFamily: "Lora",
     },
@@ -253,7 +266,7 @@ const styles = StyleSheet.create({
         flexDirection: "column",
         justifyContent: "center",
         alignItems: "center",
-        marginTop: 10,
+        marginTop: 4,
     },
     removeButtonText: {
         color: "#fff",

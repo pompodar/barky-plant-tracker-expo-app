@@ -12,6 +12,7 @@ const FullScreenImageScreen = ({ route, navigation }) => {
             >
                 <Text style={styles.closeText}>Close</Text>
             </TouchableOpacity>
+            
             <Image source={{ uri }} style={styles.image} />
         </View>
     );

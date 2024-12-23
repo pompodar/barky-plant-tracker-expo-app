@@ -21,10 +21,12 @@ const SavePhotoScreen = ({ navigation }) => {
     const pickImage = async () => {
         const permissionResult =
             await ImagePicker.requestMediaLibraryPermissionsAsync();
+        
         if (permissionResult.granted === false) {
             alert("Permission to access media library is required!");
             return;
         }
+
         let result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.Images,
             allowsEditing: true,
@@ -43,7 +45,15 @@ const SavePhotoScreen = ({ navigation }) => {
         }
 
         try {
-            const photo = { uri: photoUri, date: new Date().toLocaleString() };
+            const photo = {
+                uri: photoUri,
+                date: new Date().toLocaleDateString("en-US", {
+                    year: "2-digit",
+                    month: "2-digit",
+                    day: "2-digit",
+                }),
+            };
+
             const storedData =
                 JSON.parse(await AsyncStorage.getItem("pics")) || {};
             if (!storedData[plantName]) {
@@ -52,7 +62,6 @@ const SavePhotoScreen = ({ navigation }) => {
 
             storedData[plantName].push(photo);
 
-            // Save the updated photos in AsyncStorage
             await AsyncStorage.setItem("pics", JSON.stringify(storedData));
             alert("Photo saved");
             navigation.navigate("Home");

@@ -1,10 +1,10 @@
 import React from "react";
-import {
-    View,
-    Text,
-} from "react-native";
+import { View, Text } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
-import { createStackNavigator } from "@react-navigation/stack";
+import {
+    createStackNavigator,
+    CardStyleInterpolators,
+} from "@react-navigation/stack";
 import HomeScreen from "./screens/HomeScreen";
 import SavePhotoScreen from "./screens/SavePhotoScreen";
 import ComparePhotosScreen from "./screens/ComparePhotosScreen";
@@ -29,7 +29,13 @@ export default function App() {
 
     return (
         <NavigationContainer>
-            <Stack.Navigator initialRouteName="Home">
+            <Stack.Navigator
+                initialRouteName="Home"
+                screenOptions={{
+                    cardStyleInterpolator:
+                        CardStyleInterpolators.forRevealFromBottomAndroid,
+                }}
+            >
                 <Stack.Screen
                     name="Home"
                     component={HomeScreen}
