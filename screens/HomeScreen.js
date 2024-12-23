@@ -93,6 +93,17 @@ const HomeScreen = ({ navigation }) => {
 
     return (
         <View style={styles.container}>
+            <Image
+                style={{
+                    position: "absolute",
+                    top: "50%",
+                    left: "50%",
+                    transform: [{ translateX: -70 }, { translateY: -70 }],
+                    width: 140,
+                    height: 140,
+                }}
+                source={require("../assets/images/leaf.png")}
+            />
             <>
                 {Object.keys(photosByPlant).length === 0 ? (
                     <Text style={styles.noPhotos}>No photos uploaded yet!</Text>
@@ -188,7 +199,16 @@ const HomeScreen = ({ navigation }) => {
                 >
                     <AntDesign name="home" size={24} color="#F4A460" />
 
-                    <Text style={styles.navigationText}>Home</Text>
+                    <Text style={styles.navigationText}>home</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                    style={styles.navigationItem}
+                    onPress={() => navigation.navigate("Save Photo")}
+                >
+                    <AntDesign name="plus" size={24} color="#F4A460" />
+
+                    <Text style={styles.navigationText}>add plant</Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity
@@ -198,6 +218,15 @@ const HomeScreen = ({ navigation }) => {
                     <AntDesign name="upload" size={24} color="#F4A460" />
 
                     <Text style={styles.navigationText}>upload</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                    style={styles.navigationItem}
+                    onPress={() => navigation.navigate("Save Photo")}
+                >
+                    <AntDesign name="info" size={24} color="#F4A460" />
+
+                    <Text style={styles.navigationText}>info</Text>
                 </TouchableOpacity>
             </View>
         </View>

@@ -12,6 +12,7 @@ import PlantGalleryScreen from "./screens/PlantGalleryScreen";
 import CompareScreen from "./screens/CompareScreen";
 import FullScreenImageScreen from "./screens/FullScreenImageScreen";
 import { useFont } from "expo-dynamic-fonts";
+import AntDesign from "@expo/vector-icons/AntDesign";
 
 const Stack = createStackNavigator();
 
@@ -40,7 +41,44 @@ export default function App() {
                     name="Home"
                     component={HomeScreen}
                     options={{
-                        title: "Bayka",
+                        headerTitle: () => (
+                            <View
+                                style={{
+                                    width: "100%",
+                                    display: "flex",
+                                    flexDirection: "row",
+                                    justifyContent: "space-between",
+                                    alignItems: "center",
+                                }}
+                            >
+                                <Text
+                                    style={{ fontSize: 18, color: "#98FF98" }}
+                                >
+                                    Bayka
+                                </Text>
+
+                                <View
+                                    style={{
+                                        width: "20%",
+                                        display: "flex",
+                                        flexDirection: "row",
+                                        justifyContent: "space-between",
+                                    }}
+                                >
+                                    <AntDesign
+                                        name="login"
+                                        size={20}
+                                        color="#98FF98"
+                                    />
+
+                                    <AntDesign
+                                        name="profile"
+                                        size={20}
+                                        color="#98FF98"
+                                    />
+                                </View>
+                            </View>
+                        ),
                         headerTitleStyle: {
                             fontSize: 24,
                             fontFamily: "Lora",
