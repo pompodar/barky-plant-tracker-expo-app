@@ -1,21 +1,35 @@
 import React from "react";
-import { View, Text, Image, ScrollView, StyleSheet } from "react-native";
+import { View, Text, Image, StyleSheet, FlatList, TouchableOpacity } from "react-native";
 
-const CompareScreen = ({ route }) => {
+const CompareScreen = ({ route, navigation }) => {
     const { selectedPhotos } = route.params;
 
+    const openFullScreen = ( uri ) => {
+        navigation.navigate("FullScreenImageScreen", { uri });
+    };
+
     return (
-        <ScrollView contentContainerStyle={styles.container}>
-            <ScrollView horizontal>
-                {selectedPhotos.map((photo, idx) => (
-                    <Image
-                        key={idx}
-                        source={{ uri: photo.uri }}
-                        style={styles.photo}
-                    />
-                ))}
-            </ScrollView>
-        </ScrollView>
+        <View style={styles.container}>
+            <FlatList
+                data={selectedPhotos}
+                numColumns={2}
+                keyExtractor={(item, index) => index.toString()}
+                renderItem={({ item }) => (
+                    <View style={styles.photoContainer}>
+                        <TouchableOpacity
+                            onPress={() => openFullScreen(item.uri)}
+                        >
+                            <Image
+                                source={{ uri: item.uri }}
+                                style={styles.photo}
+                            />
+
+                            <Text style={styles.dateText}>{item.date}</Text>
+                        </TouchableOpacity>
+                    </View>
+                )}
+            />
+        </View>
     );
 };
 
@@ -36,8 +50,8 @@ const styles = StyleSheet.create({
         marginBottom: 8,
     },
     photo: {
-        width: 100,
-        height: 100,
+        width: 180,
+        height: 180,
         marginHorizontal: 4,
     },
 });

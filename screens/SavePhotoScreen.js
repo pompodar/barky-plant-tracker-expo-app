@@ -10,7 +10,9 @@ import {
     TouchableOpacity,
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
+import AntDesign from "@expo/vector-icons/AntDesign";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useFont } from "expo-dynamic-fonts";
 
 const SavePhotoScreen = ({ navigation }) => {
     const [photoUri, setPhotoUri] = useState(null);
@@ -47,7 +49,7 @@ const SavePhotoScreen = ({ navigation }) => {
             if (!storedData[plantName]) {
                 storedData[plantName] = [];
             }
-            
+
             storedData[plantName].push(photo);
 
             // Save the updated photos in AsyncStorage
@@ -59,6 +61,17 @@ const SavePhotoScreen = ({ navigation }) => {
             console.error(error);
         }
     };
+
+    const lora = useFont("Lora");
+    const openSansLoaded = useFont("Open Sans");
+
+    if (!lora || !openSansLoaded) {
+        return (
+            <View>
+                <Text>Loading fonts...</Text>
+            </View>
+        );
+    }
 
     return (
         <View style={styles.container}>
@@ -75,6 +88,26 @@ const SavePhotoScreen = ({ navigation }) => {
                 <Image source={{ uri: photoUri }} style={styles.image} />
             )}
             <Button title="Save Photo" onPress={savePhoto} />
+
+            <View style={styles.navigation}>
+                <TouchableOpacity
+                    style={styles.navigationItem}
+                    onPress={() => navigation.navigate("Home")}
+                >
+                    <AntDesign name="home" size={24} color="#F4A460" />
+
+                    <Text style={styles.navigationText}>Home</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                    style={styles.navigationItem}
+                    onPress={() => navigation.navigate("Save Photo")}
+                >
+                    <AntDesign name="upload" size={24} color="#F4A460" />
+
+                    <Text style={styles.navigationText}>upload</Text>
+                </TouchableOpacity>
+            </View>
         </View>
     );
 };
@@ -109,6 +142,32 @@ const styles = StyleSheet.create({
         width: 200,
         height: 200,
         marginBottom: 20,
+    },
+    navigation: {
+        position: "absolute",
+        bottom: 0,
+        left: 0,
+        right: 0,
+        height: 60,
+        width: "110%",
+        flexDirection: "row",
+        justifyContent: "center",
+        alignItems: "center",
+        gap: 42,
+        borderTopWidth: 0,
+        borderColor: "#ccc",
+    },
+    navigationItem: {
+        flexDirection: "column",
+        justifyContent: "space-around",
+        alignItems: "center",
+    },
+    navigationIcon: {
+        fontSize: 12,
+    },
+    navigationText: {
+        color: "#F4A460",
+        fontSize: 10,
     },
 });
 

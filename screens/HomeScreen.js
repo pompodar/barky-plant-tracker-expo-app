@@ -2,11 +2,11 @@ import React, { useState, useEffect } from "react";
 import {
     View,
     Button,
-    Text,
     FlatList,
     Image,
     StyleSheet,
     TouchableOpacity,
+    Text,
     Alert,
 } from "react-native";
 import AntDesign from "@expo/vector-icons/AntDesign";
@@ -93,11 +93,6 @@ const HomeScreen = ({ navigation }) => {
     return (
         <View style={styles.container}>
             <>
-                <Button
-                    title="Upload Photo"
-                    onPress={() => navigation.navigate("Save Photo")}
-                />
-
                 {Object.keys(photosByPlant).length === 0 ? (
                     <Text style={styles.noPhotos}>No photos uploaded yet!</Text>
                 ) : (
@@ -114,16 +109,6 @@ const HomeScreen = ({ navigation }) => {
                                 <Text style={styles.plantName}>
                                     {plantName}
                                 </Text>
-
-                                <Button
-                                    title="Compare"
-                                    onPress={() =>
-                                        navigation.navigate("PlantGallery", {
-                                            plantName: plantName,
-                                            photos: photosByPlant[plantName],
-                                        })
-                                    }
-                                />
                             </View>
 
                             <FlatList
@@ -163,16 +148,46 @@ const HomeScreen = ({ navigation }) => {
                                     </View>
                                 )}
                             />
+
+                            <TouchableOpacity
+                                style={styles.leaf}
+                                onPress={() =>
+                                    navigation.navigate("PlantGallery", {
+                                        plantName: plantName,
+                                        photos: photosByPlant[plantName],
+                                    })
+                                }
+                            >
+                                <AntDesign
+                                    name="shrink"
+                                    size={24}
+                                    color="#4A4A4A"
+                                />
+
+                                <Text style={styles.compareText}>compare</Text>
+                            </TouchableOpacity>
                         </View>
                     ))
                 )}
             </>
 
-            <View>
+            <View style={styles.navigation}>
                 <TouchableOpacity
+                    style={styles.navigationItem}
                     onPress={() => navigation.navigate("Home")}
                 >
-                    <Text>Home</Text>
+                    <AntDesign name="home" size={24} color="#F4A460" />
+
+                    <Text style={styles.navigationText}>Home</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                    style={styles.navigationItem}
+                    onPress={() => navigation.navigate("Save Photo")}
+                >
+                    <AntDesign name="upload" size={24} color="#F4A460" />
+
+                    <Text style={styles.navigationText}>upload</Text>
                 </TouchableOpacity>
             </View>
         </View>
@@ -181,30 +196,37 @@ const HomeScreen = ({ navigation }) => {
 
 const styles = StyleSheet.create({
     container: {
-        height: "90%",
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "space-between",
+        height: "100%",
         alignItems: "flex-start",
         padding: 16,
         backgroundColor: "#fff",
+        fontFamily: "Lora",
     },
     title: {
         fontSize: 18,
         fontWeight: "bold",
         marginBottom: 16,
+        fontFamily: "Lora",
+    },
+    compareText: {
+        color: "#4A4A4A",
+        fontSize: 10,
+        fontFamily: "Lora",
     },
     plantSection: {
         display: "flex",
         flexDirection: "column",
         justifyContent: "center",
         alignItems: "center",
-        marginBlock: 20,
+        marginTop: 20,
+        height: 200,
     },
     plantName: {
         fontSize: 16,
-        fontWeight: "bold",
         marginBottom: 8,
+        color: "#008080", // Text color
+        fontFamily: "Lora",
+        alignSelf: "flex-start",
     },
     photoContainer: {
         margin: 5,
@@ -224,6 +246,7 @@ const styles = StyleSheet.create({
     dateText: {
         fontSize: 12,
         color: "#888",
+        fontFamily: "Lora",
     },
     removeButton: {
         display: "flex",
@@ -236,6 +259,32 @@ const styles = StyleSheet.create({
         color: "#fff",
         fontSize: 14,
         fontWeight: "bold",
+    },
+    navigation: {
+        position: "absolute",
+        bottom: 0,
+        left: 0,
+        right: 0,
+        height: 60,
+        width: "110%",
+        flexDirection: "row",
+        justifyContent: "center",
+        alignItems: "center",
+        gap: 42,
+        borderTopWidth: 0,
+        borderColor: "#ccc",
+    },
+    navigationItem: {
+        flexDirection: "column",
+        justifyContent: "space-around",
+        alignItems: "center",
+    },
+    navigationIcon: {
+        fontSize: 12,
+    },
+    navigationText: {
+        color: "#F4A460",
+        fontSize: 10,
     },
 });
 
