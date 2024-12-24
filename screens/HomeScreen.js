@@ -263,7 +263,8 @@ const styles = StyleSheet.create({
     plantName: {
         fontSize: 16,
         marginBottom: 8,
-        color: "#008080", // Text color
+        color: "#008080",
+        color: "#98FF98",
         fontFamily: "Lora",
         alignSelf: "flex-start",
     },

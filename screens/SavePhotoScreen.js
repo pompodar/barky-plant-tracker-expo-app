@@ -1,27 +1,34 @@
-import React, { useState } from "react";
-import {
-    View,
-    Text,
-    Button,
-    TextInput,
-    Image,
-    StyleSheet,
-    Alert,
-    TouchableOpacity,
-} from "react-native";
+import React, { useState, useEffect } from "react";
+import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useFont } from "expo-dynamic-fonts";
+import { Picker } from "@react-native-picker/picker";
+import { Shadow } from "react-native-shadow-2";
 
 const SavePhotoScreen = ({ navigation }) => {
     const [photoUri, setPhotoUri] = useState(null);
     const [plantName, setPlantName] = useState("");
+    const [plantOptions, setPlantOptions] = useState([]);
+
+    useEffect(() => {
+        const loadPlantOptions = async () => {
+            try {
+                const storedData =
+                    JSON.parse(await AsyncStorage.getItem("pics")) || {};
+                setPlantOptions(Object.keys(storedData));
+            } catch (error) {
+                console.error("Failed to load plant options:", error);
+            }
+        };
+
+        loadPlantOptions();
+    }, []);
 
     const pickImage = async () => {
         const permissionResult =
             await ImagePicker.requestMediaLibraryPermissionsAsync();
-        
+
         if (permissionResult.granted === false) {
             alert("Permission to access media library is required!");
             return;
@@ -40,7 +47,7 @@ const SavePhotoScreen = ({ navigation }) => {
 
     const savePhoto = async () => {
         if (!photoUri || !plantName) {
-            alert("Please select a photo and enter a plant name.");
+            alert("Please select a photo and choose a plant.");
             return;
         }
 
@@ -71,32 +78,88 @@ const SavePhotoScreen = ({ navigation }) => {
         }
     };
 
-    const lora = useFont("Lora");
-    const openSansLoaded = useFont("Open Sans");
-
-    if (!lora || !openSansLoaded) {
-        return (
-            <View>
-                <Text>Loading fonts...</Text>
-            </View>
-        );
-    }
-
     return (
         <View style={styles.container}>
-            <TextInput
-                style={styles.input}
-                placeholder="Enter plant name"
-                value={plantName}
-                onChangeText={setPlantName}
+            <Image
+                style={{
+                    position: "absolute",
+                    top: "30%",
+                    left: "50%",
+                    transform: [{ translateX: -70 }, { translateY: -70 }],
+                    width: 140,
+                    height: 140,
+                }}
+                source={require("../assets/images/leaf.png")}
             />
-            <TouchableOpacity style={styles.button} onPress={pickImage}>
-                <Text style={styles.buttonText}>Pick an image</Text>
-            </TouchableOpacity>
-            {photoUri && (
-                <Image source={{ uri: photoUri }} style={styles.image} />
+
+            <Image
+                style={{
+                    position: "absolute",
+                    top: "88%",
+                    left: "88%",
+                    transform: [{ translateX: -70 }, { translateY: -70 }],
+                    width: 100,
+                    height: 100,
+                }}
+                source={require("../assets/images/leaf.png")}
+            />
+            <View
+                style={{
+                    position: "relative",
+                    width: "100%",
+                    borderRadius: 5,
+                    overflow: "hidden",
+                    alignSelf: "center",
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                }}
+            >
+                <AntDesign
+                    style={{ position: "absolute", right: 55, top: 14 }}
+                    name="downcircle"
+                    size={24}
+                    color="white"
+                />
+
+                <Picker
+                    selectedValue={plantName}
+                    onValueChange={(itemValue) => setPlantName(itemValue)}
+                    itemStyle={styles.pickerItem}
+                    style={styles.picker}
+                >
+                    <Picker.Item label="Select a plant" value="" />
+                    {plantOptions.map((plant) => (
+                        <Picker.Item key={plant} label={plant} value={plant} />
+                    ))}
+                </Picker>
+            </View>
+
+            {plantName && (
+                <TouchableOpacity
+                    style={{ marginBlock: 20 }}
+                    onPress={pickImage}
+                >
+                    <AntDesign name="addfile" size={34} color="#F4A460" />
+                    <Text style={styles.navigationText}>upload</Text>
+                </TouchableOpacity>
             )}
-            <Button title="Save Photo" onPress={savePhoto} />
+
+            {photoUri && (
+                <Shadow>
+                    <Image source={{ uri: photoUri }} style={styles.image} />
+                </Shadow>
+            )}
+
+            {photoUri && (
+                <TouchableOpacity
+                    style={styles.navigationItem}
+                    onPress={savePhoto}
+                >
+                    <AntDesign name="save" size={42} color="#FF7F50" />
+                    <Text style={styles.navigationText}>save</Text>
+                </TouchableOpacity>
+            )}
 
             <View style={styles.navigation}>
                 <TouchableOpacity
@@ -104,7 +167,6 @@ const SavePhotoScreen = ({ navigation }) => {
                     onPress={() => navigation.navigate("Home")}
                 >
                     <AntDesign name="home" size={24} color="#F4A460" />
-
                     <Text style={styles.navigationText}>Home</Text>
                 </TouchableOpacity>
 
@@ -113,8 +175,7 @@ const SavePhotoScreen = ({ navigation }) => {
                     onPress={() => navigation.navigate("Save Photo")}
                 >
                     <AntDesign name="upload" size={24} color="#F4A460" />
-
-                    <Text style={styles.navigationText}>upload</Text>
+                    <Text style={styles.navigationText}>Upload</Text>
                 </TouchableOpacity>
             </View>
         </View>
@@ -128,20 +189,24 @@ const styles = StyleSheet.create({
         alignItems: "center",
         padding: 16,
     },
-    input: {
+    picker: {
         width: "80%",
-        borderColor: "#ccc",
-        borderWidth: 1,
-        padding: 10,
+        height: 50,
         marginBottom: 20,
-        borderRadius: 5,
+        color: "white",
+        backgroundColor: "#F4A460",
+        zIndex: -1,
+    },
+    pickerItem: {
+        width: "80%",
+        height: 50,
+        marginBottom: 20,
+        backgroundColor: "#F4A460",
     },
     button: {
         padding: 20,
-        paddingBlock: 10,
         borderRadius: 5,
-        backgroundColor: "aqua",
-        color: "white",
+        backgroundColor: "#F4A460",
         marginBottom: 20,
     },
     buttonText: {
@@ -151,6 +216,7 @@ const styles = StyleSheet.create({
         width: 200,
         height: 200,
         marginBottom: 20,
+        borderRadius: 9999,
     },
     navigation: {
         position: "absolute",
@@ -170,9 +236,6 @@ const styles = StyleSheet.create({
         flexDirection: "column",
         justifyContent: "space-around",
         alignItems: "center",
-    },
-    navigationIcon: {
-        fontSize: 12,
     },
     navigationText: {
         color: "#F4A460",
